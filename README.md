@@ -4,3 +4,6 @@ Hello guys! This is a mobile application made using flutter named â€˜Unscatterâ€
 
 The application allows the user to record their upcoming classes of their university. The classes are displayed on the dashboard sorted according to the latest class. The user will be able to edit the classes. More precisely, the user will be able to add classes, add one-time extra classes, delete all the classes after the semester is over, delete a single class and edit class details. 
 
+___
+
+Feel free to contribute to this repository. Thanks in advance to the contributors!
