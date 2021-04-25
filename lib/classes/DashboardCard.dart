@@ -22,16 +22,16 @@ class _DashboardCardState extends State<DashboardCard> {
   Widget build(BuildContext context) {
     Size query = MediaQuery.of(context).size;
     return Container(
-        height: query.height * 0.1,
+       width: query.width*0.9,
         margin: EdgeInsets.only(top: 5, bottom: 5),
         decoration: BoxDecoration(
           boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 1.0,
-              offset: Offset(0, 14),
-              spreadRadius: -13,
-            )
+            // BoxShadow(
+            //   color: Colors.black,
+            //   blurRadius: 1.0,
+            //   offset: Offset(0, 14),
+            //   spreadRadius: -13,
+            // )
           ],
         ),
         child: Card(
