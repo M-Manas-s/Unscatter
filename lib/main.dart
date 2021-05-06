@@ -35,11 +35,7 @@ class _LandingPageState extends State<LandingPage> {
         centerTitle: true,
       ),
 
-      body: Dashboard(),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xFFE45465),
-        child: Icon(Icons.add, color: Colors.white,),
-      ),
+      body:AddOrModify(),
     );
   }
 }
