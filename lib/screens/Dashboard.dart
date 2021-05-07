@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:unscatter/classes/DashboardCard.dart';
+import 'package:unscatter/components/DashboardCard.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:unscatter/constants/constants.dart';
+import 'package:unscatter/constants/enums.dart';
 
 List<Widget> list = [
   WeekDayText(day: "MONDAY", date: "19th April"),
@@ -9,34 +10,35 @@ List<Widget> list = [
       courseName: "CSE",
       courseID: "2004",
       time: "9:00 AM - 9:50 AM",
-      theory: true,
-      extraClass: false),
+      classType: ClassType.theory,
+      specialClass: SpecialClass.standard),
   DashboardCard(
       courseName: "CSE",
       courseID: "1003",
       time: "10:00 AM - 10:50 AM",
-      theory: true,
-      extraClass: false),
+      classType: ClassType.theory,
+      specialClass: SpecialClass.standard),
   DashboardCard(
       courseName: "MAT",
       courseID: "2001",
       time: "11:00 AM - 11:50 AM",
-      theory: true,
-      extraClass: false),
+      classType: ClassType.theory,
+      specialClass: SpecialClass.standard),
   DashboardCard(
       courseName: "PHY",
       courseID: "1701",
       time: "12:00 PM - 12:50 AM",
-      theory: false,
-      extraClass: true),
+      classType: ClassType.theory,
+      specialClass: SpecialClass.extra),
   DashboardCard(
       courseName: "CSE",
       courseID: "1003",
       time: "10:00 AM - 10:50 AM",
-      theory: true,
-      extraClass: false),
+      classType: ClassType.lab,
+      specialClass: SpecialClass.standard),
 ];
 
+// ignore: must_be_immutable
 class Dashboard extends StatefulWidget {
   static String id = "Dashboard";
 
@@ -127,8 +129,8 @@ class _DashboardState extends State<Dashboard> {
 }
 
 class WeekDayText extends StatelessWidget {
-  String day;
-  String date;
+  final String day;
+  final String date;
 
   WeekDayText({@required this.day, @required this.date});
 

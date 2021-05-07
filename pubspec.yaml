@@ -33,6 +33,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   unicorndial: "^1.1.5"
+  weekday_selector: ^1.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -65,6 +66,10 @@ flutter:
    - family: Barlow
      fonts:
        - asset: assets/fonts/BarlowLight.ttf
+
+   - family: Lobster
+     fonts:
+         - asset: assets/fonts/Lobster.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

@@ -4,8 +4,9 @@ class CustomCard extends StatelessWidget {
 
   final Widget child;
   final Color color;
+  final double radius;
 
-  CustomCard({@required this.child, this.color });
+  CustomCard({@required this.child, this.color= const Color(0xFF282B4E) ,this.radius=10.0});
 
   @override
   Widget build(BuildContext context) {
@@ -13,15 +14,15 @@ class CustomCard extends StatelessWidget {
         .of(context)
         .size;
     return Container(
-        width: query.width * 0.9,
+        //width: query.width * 0.9,
         margin: EdgeInsets.only(top: 5, bottom: 5),
         child: Card(
-          color: color == null ? Color(0xFF282B4E) : color,
+          color: color,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(radius),
           ),
           child: InkWell(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(radius),
             splashColor: Color(0xFF1E7777).withAlpha(30),
             onTap: () {},
             child: Container(

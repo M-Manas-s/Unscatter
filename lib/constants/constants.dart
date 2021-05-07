@@ -17,6 +17,7 @@ TextStyle kTimeDB = TextStyle(
   fontSize: 13,
   letterSpacing: 2,
 );
+
 ThemeData kAppTheme = ThemeData.dark().copyWith(
   primaryColor: Color(0xFF0A0E23),
   scaffoldBackgroundColor: Color(0xFF0F142d),
