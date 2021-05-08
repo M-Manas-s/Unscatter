@@ -26,6 +26,12 @@ ThemeData kAppTheme = ThemeData.dark().copyWith(
   colorScheme: ThemeData.dark().colorScheme.copyWith(
     surface: Color(0xFF0A0E23),
   ),
+  timePickerTheme: TimePickerThemeData(
+    helpTextStyle: TextStyle(
+      letterSpacing: 2,
+      fontSize: 20,
+    ),
+  )
 );
 
 ThemeData kAppTheme2 = ThemeData.dark().copyWith(

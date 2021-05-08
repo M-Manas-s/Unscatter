@@ -3,6 +3,10 @@ import 'package:unscatter/constants/enums.dart';
 
 class Course{
   String name;
-  ClassType type; //enum
+  Frequency frequency;//enum
   List<Lecture> lectures;
+
+  Course(){
+    lectures = [];
+  }
 }

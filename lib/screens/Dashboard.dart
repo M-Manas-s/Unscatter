@@ -10,32 +10,32 @@ List<Widget> list = [
       courseName: "CSE",
       courseID: "2004",
       time: "9:00 AM - 9:50 AM",
-      classType: ClassType.theory,
-      specialClass: SpecialClass.standard),
+      classType: ClassType.Theory,
+      specialClass: SpecialClass.Standard),
   DashboardCard(
       courseName: "CSE",
       courseID: "1003",
       time: "10:00 AM - 10:50 AM",
-      classType: ClassType.theory,
-      specialClass: SpecialClass.standard),
+      classType: ClassType.Theory,
+      specialClass: SpecialClass.Standard),
   DashboardCard(
       courseName: "MAT",
       courseID: "2001",
       time: "11:00 AM - 11:50 AM",
-      classType: ClassType.theory,
-      specialClass: SpecialClass.standard),
+      classType: ClassType.Theory,
+      specialClass: SpecialClass.Standard),
   DashboardCard(
       courseName: "PHY",
       courseID: "1701",
       time: "12:00 PM - 12:50 AM",
-      classType: ClassType.theory,
-      specialClass: SpecialClass.extra),
+      classType: ClassType.Theory,
+      specialClass: SpecialClass.Extra),
   DashboardCard(
       courseName: "CSE",
       courseID: "1003",
       time: "10:00 AM - 10:50 AM",
-      classType: ClassType.lab,
-      specialClass: SpecialClass.standard),
+      classType: ClassType.Lab,
+      specialClass: SpecialClass.Standard),
 ];
 
 // ignore: must_be_immutable

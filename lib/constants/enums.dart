@@ -1,15 +1,7 @@
-enum ClassType{
-  theory,
-  lab
-}
+enum ClassType { Theory, Lab }
 
-enum Frequency {
-  once,
-  weekly
-}
+enum Frequency { Once, Weekly }
 
-enum SpecialClass {
-  extra,
-  suspended,
-  standard
-}
+enum SpecialClass { Extra, Suspended, Standard }
+
+enum WeekDay { Monday, Tueday, Wednesday, Thursday, Friday, Saturday, Sunday }

@@ -26,7 +26,7 @@ class _DashboardCardState extends State<DashboardCard> {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      color: widget.specialClass == SpecialClass.extra ? Theme.of(context).accentColor : Color(0xFF282B4E),
+      color: widget.specialClass == SpecialClass.Extra ? Theme.of(context).accentColor : Color(0xFF282B4E),
       child: Row(
         children: [
           Expanded(
@@ -56,7 +56,7 @@ class _DashboardCardState extends State<DashboardCard> {
                       (Set<MaterialState> states) {
                         if (states.contains(MaterialState.pressed))
                           return Theme.of(context).accentColor;
-                        return widget.specialClass == SpecialClass.extra
+                        return widget.specialClass == SpecialClass.Extra
                             ? Theme.of(context).accentColor
                             : Color(0xFF282B4E); // Use the component's default.
                       },
@@ -67,7 +67,7 @@ class _DashboardCardState extends State<DashboardCard> {
                             side: BorderSide(color: Colors.red))),
                   ),
                   child: Text(
-                    widget.classType == ClassType.theory ? 'T' : 'L',
+                    widget.classType == ClassType.Theory ? 'T' : 'L',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 17,
