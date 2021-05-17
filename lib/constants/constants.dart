@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unicorndial/unicorndial.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:flutter/gestures.dart';
 
 TextStyle kAppBarTitleStyle = TextStyle(
   fontFamily: 'Barlow',
@@ -16,6 +18,12 @@ TextStyle kCourseNameDB = TextStyle(
 TextStyle kTimeDB = TextStyle(
   fontSize: 13,
   letterSpacing: 2,
+);
+
+const kTextDecoration = InputDecoration(
+  filled: false,
+  hintText: "Email/Mobile Number",
+  contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
 );
 
 ThemeData kAppTheme = ThemeData.dark().copyWith(
@@ -100,3 +108,110 @@ final List<UnicornButton> floatingButtonsManyOptionsSelected = [
     ),
   ),
 ];
+
+String fnameValidator(value) {
+  if (value.isEmpty) {
+    return "Please Enter Text";
+  }
+}
+
+String usernameValidator(value) {
+  if (value.isEmpty) {
+    return "Please Enter Text";
+  }
+}
+
+String dobValidator(value) {
+  String pattern = r'^\d\d[/]\d\d[/]\d\d\d\d$';
+  RegExp regex = new RegExp(pattern);
+  if (value.isEmpty) {
+    return "Please Enter Text";
+  }else if (!regex.hasMatch(value)) {
+    return "Please USe DD/MM/YYYY";
+  }
+}
+
+String numberValidator(value) {
+  if (value.isEmpty) {
+    return "Please Enter Number";
+  } else if (value.length < 10 || value.length > 10) {
+    print(value.length);
+    return "Enter A Valid Mobile Number ";
+  }
+  return null;
+}
+
+String passwordValidator(value) {
+
+  if (value.isEmpty) {
+    return 'Please Enter Text';
+  } else if (value.length <= 7) {
+    return 'Password Must Be Atleast 8 Characters Long';
+  }
+   else {
+    return null;
+  }
+}
+
+String emailChecker(value) {
+  String pattern = r'.+@.+[.].+';
+  RegExp regex = new RegExp(pattern);
+  if (value.isEmpty) {
+    return 'Please Enter Text';
+  } else if (!regex.hasMatch(value)) {
+    return "Please Enter A Valid Email";
+  }
+
+  return null;
+}
+
+class buttonWidget extends StatelessWidget {
+  final String title;
+  final Function onpressed;
+  const buttonWidget({
+    Key key,
+    this.title,
+    this.onpressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+        elevation: 2.5,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        minWidth: MediaQuery.of(context).size.width * 0.3,
+        color: Theme.of(context).accentColor,
+        onPressed: onpressed,
+        child: Text(
+          title,
+          style: TextStyle(color: Colors.white),
+        ));
+  }
+}
+
+class signUpRichText extends StatelessWidget {
+  final String title;
+  final String text;
+  final Function onTap;
+  const signUpRichText({
+    Key key,
+    @required this.title,
+    @required this.onTap, this.text = "Don't Have An Account? ",
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+          text: text,
+          style: TextStyle(color: Colors.white, fontSize: 13),
+          children: [
+            TextSpan(
+                recognizer: TapGestureRecognizer()..onTap = onTap,
+                text: title,
+                style: TextStyle(decoration: TextDecoration.underline,color: Colors.white))
+          ]),
+    );
+  }
+}

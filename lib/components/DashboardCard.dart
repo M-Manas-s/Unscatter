@@ -56,7 +56,7 @@ class _DashboardCardState extends State<DashboardCard> {
                       (Set<MaterialState> states) {
                         if (states.contains(MaterialState.pressed))
                           return Theme.of(context).accentColor;
-                        return widget.specialClass == SpecialClass.Extra
+                        return widget.specialClass != SpecialClass.Extra
                             ? Theme.of(context).accentColor
                             : Color(0xFF282B4E); // Use the component's default.
                       },

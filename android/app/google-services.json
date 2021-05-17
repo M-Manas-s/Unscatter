@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "679558270488",
+    "project_id": "unscatter-projectlevel",
+    "storage_bucket": "unscatter-projectlevel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679558270488:android:0ead96747c1b7deb193d6d",
+        "android_client_info": {
+          "package_name": "com.example.unscatter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "679558270488-1r7r538t78jdg4onneoh2ia9a4ttr4ru.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGox6bpScizaNgm1rtRJBgiQqzDjGW5Pk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "679558270488-1r7r538t78jdg4onneoh2ia9a4ttr4ru.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
