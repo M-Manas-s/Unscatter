@@ -10,13 +10,18 @@ class DashboardCard extends StatefulWidget {
   final String time;
   final ClassType classType;
   final SpecialClass specialClass;
+  final String facultyName;
+  final String classroom;
 
   DashboardCard(
-      {@required this.courseName,
+    {
+      @required this.courseName,
       @required this.courseID,
       @required this.time,
       @required this.classType,
-      @required this.specialClass});
+      @required this.facultyName,
+      @required this.classroom,
+    this.specialClass = SpecialClass.Standard});
 
   @override
   _DashboardCardState createState() => _DashboardCardState();
@@ -40,6 +45,14 @@ class _DashboardCardState extends State<DashboardCard> {
                   style: kCourseNameDB,
                 ),
                 Text(widget.time, style: kTimeDB),
+                SizedBox(height: 5,),
+                Row(
+                  children: [
+                    Text(widget.classroom+ ' - Prof. ', style: kTimeDB),
+                    Text(widget.facultyName, style: kTimeDB),
+                  ],
+                ),
+
               ],
             ),
           ),

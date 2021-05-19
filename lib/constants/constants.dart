@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:unicorndial/unicorndial.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 
 TextStyle kAppBarTitleStyle = TextStyle(

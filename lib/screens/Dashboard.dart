@@ -3,39 +3,21 @@ import 'package:unscatter/components/DashboardCard.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:unscatter/constants/constants.dart';
 import 'package:unscatter/constants/enums.dart';
+import 'package:unscatter/screens/AddOrModify.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:unscatter/screens/Login.dart';
 
 List<Widget> list = [
   WeekDayText(day: "MONDAY", date: "19th April"),
   DashboardCard(
-      courseName: "CSE",
-      courseID: "2004",
-      time: "9:00 AM - 9:50 AM",
-      classType: ClassType.Theory,
-      specialClass: SpecialClass.Standard),
-  DashboardCard(
-      courseName: "CSE",
-      courseID: "1003",
-      time: "10:00 AM - 10:50 AM",
-      classType: ClassType.Theory,
-      specialClass: SpecialClass.Standard),
-  DashboardCard(
-      courseName: "MAT",
-      courseID: "2001",
-      time: "11:00 AM - 11:50 AM",
-      classType: ClassType.Theory,
-      specialClass: SpecialClass.Standard),
-  DashboardCard(
-      courseName: "PHY",
-      courseID: "1701",
-      time: "12:00 PM - 12:50 AM",
-      classType: ClassType.Theory,
-      specialClass: SpecialClass.Extra),
-  DashboardCard(
-      courseName: "CSE",
-      courseID: "1003",
-      time: "10:00 AM - 10:50 AM",
-      classType: ClassType.Lab,
-      specialClass: SpecialClass.Standard),
+    courseName: "CSE",
+    courseID: "2004",
+    time: "9:00 AM - 9:50 AM",
+    classType: ClassType.Theory,
+    facultyName: 'Vijay Kumar',
+    classroom: 'AB1 206',
+  ),
 ];
 
 // ignore: must_be_immutable
@@ -51,21 +33,39 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-
   @override
   Widget build(BuildContext context) {
     Size query = MediaQuery.of(context).size;
+    FirebaseAuth _auth = FirebaseAuth.instance;
 
     return Scaffold(
-      floatingActionButton: UnicornDialer(
-        onMainButtonPressed: () {},
-        backgroundColor: Colors.black38,
-        parentButtonBackground: Theme.of(context).accentColor,
-        orientation: UnicornOrientation.VERTICAL,
-        parentButton: widget.startSelecting
-            ? Icon(Icons.assignment, color: Colors.white)
-            : Icon(Icons.add, color: Colors.white),
-        childButtons: widget.startSelecting ? ( widget.selectedItem.length==1 ? floatingButtonsOneOptionSelected : floatingButtonsManyOptionsSelected ) : null,
+      appBar: AppBar(
+        elevation: 8,
+        title: Text("Unscatter", style: kAppBarTitleStyle),
+        centerTitle: true,
+        actions: [
+          PopupMenuButton<int>(
+              itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[
+                    PopupMenuItem<int>(
+                        value: 1, child: Text('Sign Out')),
+                  ],
+              onSelected: (int value) async {
+                  await _auth.signOut();
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  prefs.remove('email');
+                  Navigator.pushNamed(context, LoginPage.id);
+              }),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).accentColor,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          Navigator.pushNamed(context, AddOrModify.id);
+        },
       ),
       body: Container(
         height: query.height,

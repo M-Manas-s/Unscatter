@@ -7,6 +7,7 @@ import 'package:unscatter/constants/constants.dart';
 import 'package:unscatter/screens/Dashboard.dart';
 import 'package:unscatter/screens/Registration.dart';
 import 'package:unscatter/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginPage extends StatefulWidget {
   static String id = 'LoginPage';
@@ -27,28 +28,11 @@ class _LoginPageState extends State<LoginPage> {
   FirebaseAuth auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
 
-  void getUser() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var email = prefs.getString('email');
-    if (  email!=null )
-    {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (context) => LandingPage()
-          ),
-          ModalRoute.withName(LandingPage.id)
-      );
-    }
-  }
-
   @override
   void initState() {
-    getUser();
     errorText = ' ';
     super.initState();
   }
-  bool _isLoggedIn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -148,6 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                                     buttonWidget(
                                       title: "Student Login",
                                       onpressed: () async {
+
                                         if (_formKey.currentState.validate()) {
                                           setState(() {
                                             spinner = true;
@@ -155,8 +140,21 @@ class _LoginPageState extends State<LoginPage> {
                                           try {
                                             var user = await auth.signInWithEmailAndPassword(
                                                 email: email, password: password);
+                                            await FirebaseFirestore.instance
+                                                .collection('Student')
+                                                .where('Email', isEqualTo: email)
+                                                .get()
+                                                .then((QuerySnapshot querySnapshot) {
+                                              if ( querySnapshot==null ) {
+                                                print("Not a Student");
+                                                throw Exception(
+                                                    "Not a Student");
+                                              }
+                                            });
+
                                             SharedPreferences prefs = await SharedPreferences.getInstance();
                                             prefs.setString('email', '$email');
+                                            prefs.setString('user','Student');
                                             if (user != null) {
                                               Navigator.pushAndRemoveUntil(
                                                   context,
@@ -187,8 +185,20 @@ class _LoginPageState extends State<LoginPage> {
                                           try {
                                             var user = await auth.signInWithEmailAndPassword(
                                                 email: email, password: password);
+
+                                            await FirebaseFirestore.instance
+                                                .collection('Faculty')
+                                                .where('Email', isEqualTo: email)
+                                                .get()
+                                                .then((QuerySnapshot querySnapshot) {
+                                              if ( querySnapshot==null )
+                                                print("Not a Faculty");
+                                                throw Exception("Not a Faculty");
+                                            });
+
                                             SharedPreferences prefs = await SharedPreferences.getInstance();
                                             prefs.setString('email', '$email');
+                                            prefs.setString('user','Faculty');
                                             if (user != null) {
                                               Navigator.pushAndRemoveUntil(
                                                   context,

@@ -235,6 +235,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   });
                                   SharedPreferences prefs = await SharedPreferences.getInstance();
                                   prefs.setString('email', '$email');
+                                  prefs.setString('user','Student');
                                   prefs.setBool('periodBegun',false);
                                   if (newuser != null) {
                                     Navigator.pushNamed(context, LandingPage.id);
@@ -270,6 +271,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   });
                                   SharedPreferences prefs = await SharedPreferences.getInstance();
                                   prefs.setString('email', '$email');
+                                  prefs.setString('user','Faculty');
                                   prefs.setBool('periodBegun',false);
                                   if (newuser != null) {
                                     Navigator.pushNamed(context, LandingPage.id);

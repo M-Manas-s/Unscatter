@@ -4,6 +4,7 @@ import 'package:unscatter/constants/constants.dart';
 import 'package:unscatter/screens/Dashboard.dart';
 import 'package:unscatter/screens/AddOrModify.dart';
 import 'package:unscatter/screens/Delete.dart';
+import 'package:unscatter/screens/Experiment.dart';
 import 'package:unscatter/screens/Login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -19,6 +20,7 @@ Future<void> main() async {
 
   runApp(
     MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: LandingPage(),
       debugShowCheckedModeBanner: false,
       routes: {
@@ -41,19 +43,35 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
+
+  String email;
+
+  void getUser() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      email = prefs.getString('email') ?? ' ';
+    });
+    print(email);
+    // if (  email!=null )
+    // {
+    //   Navigator.pushAndRemoveUntil(
+    //       context,
+    //       MaterialPageRoute(
+    //           builder: (context) => LandingPage()
+    //       ),
+    //       ModalRoute.withName(LandingPage.id)
+    //   );
+    // }
+  }
+
+  @override
+  void initState() {
+    getUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        elevation: 8,
-        title : Text("Unscatter",
-        style: kAppBarTitleStyle
-        ),
-        centerTitle: true,
-      ),
-
-      body:Dashboard(),
-    );
+    return (email!=' ') ? Dashboard() : LoginPage();
   }
 }
