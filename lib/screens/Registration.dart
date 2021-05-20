@@ -90,7 +90,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             textAlign: TextAlign.center,
                             decoration: InputDecoration(
                               filled: false,
-                              hintText: "Registration Number",
+                              hintText: "Unique ID",
                               contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                             ),
                             validator: usernameValidator,
@@ -263,7 +263,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                       .collection('Faculty')
                                       .add({
                                     'Name': "$fullName",
-                                    "Regno": "$regno",
+                                    "FacultyID": "$regno",
                                     "Mobile no." : number,
                                     "DOB" : dob,
                                     "Address" : address,
