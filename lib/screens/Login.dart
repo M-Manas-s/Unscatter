@@ -188,12 +188,14 @@ class _LoginPageState extends State<LoginPage> {
 
                                             await FirebaseFirestore.instance
                                                 .collection('Faculty')
-                                                .where('Email', isEqualTo: email)
+                                                .where("Email", isEqualTo: email)
                                                 .get()
                                                 .then((QuerySnapshot querySnapshot) {
-                                              if ( querySnapshot==null )
+                                              if ( querySnapshot==null ) {
                                                 print("Not a Faculty");
-                                                throw Exception("Not a Faculty");
+                                                throw Exception(
+                                                    "Not a Faculty");
+                                              }
                                             });
 
                                             SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -37,6 +37,7 @@ class _ExperimentState extends State<Experiment> {
   Future<void> addUser() {
     CollectionReference timeSlots = FirebaseFirestore.instance.collection('Courses');
 
+    // DateFormat("yyyy-MM-dd - kk:mm").format(ad(t1,4))
     // Call the user's CollectionReference to add a new user
     return timeSlots
         .add({

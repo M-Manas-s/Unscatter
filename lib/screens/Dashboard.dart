@@ -6,7 +6,9 @@ import 'package:unscatter/constants/enums.dart';
 import 'package:unscatter/screens/AddOrModify.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:unscatter/screens/AddOrModifyFaculty.dart';
 import 'package:unscatter/screens/Login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 List<Widget> list = [
   WeekDayText(day: "MONDAY", date: "19th April"),
@@ -33,6 +35,19 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+
+  SharedPreferences prefs;
+
+  void sf() async{
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  @override
+  void initState() {
+    sf();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size query = MediaQuery.of(context).size;
@@ -53,6 +68,7 @@ class _DashboardState extends State<Dashboard> {
                   await _auth.signOut();
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   prefs.remove('email');
+                  prefs.remove('user');
                   Navigator.pushNamed(context, LoginPage.id);
               }),
         ],
@@ -64,7 +80,7 @@ class _DashboardState extends State<Dashboard> {
           color: Colors.white,
         ),
         onPressed: () {
-          Navigator.pushNamed(context, AddOrModify.id);
+          Navigator.pushNamed(context, prefs.getString('user')=='Faculty' ? AddOrModifyFaculty.id : AddOrModify.id);
         },
       ),
       body: Container(

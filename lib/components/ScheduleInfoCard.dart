@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:unscatter/classes/Lecture.dart';
 import 'package:unscatter/components/CustomCard.dart';
+import 'package:intl/intl.dart';
+import 'package:unscatter/constants/enums.dart';
 
 class ScheduleInfoCard extends StatelessWidget {
-  final Lecture lecture;
-  final Function delete;
-  final Function edit;
+  final TimeSlot ts;
+  final ClassType type;
 
-  const ScheduleInfoCard({Key key, @required this.lecture, @required this.delete, @required this.edit}) : super(key: key);
+  const ScheduleInfoCard({Key key, @required this.ts,  @required this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class ScheduleInfoCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  lecture.weekday.toString().split('.')[1],
+                  DateFormat("EEEE").format(DateTime.parse(ts.startDayTime.split(' ')[0])),
                   style: TextStyle(
                       fontSize: 28,
                       letterSpacing: 2,
@@ -34,14 +35,14 @@ class ScheduleInfoCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${lecture.startTime.format(context)} - ',
+                      DateFormat("jm").format(DateTime.parse(ts.startDayTime.split(' ')[0]+' '+ts.startDayTime.split(' ')[2]))+' - ',
                       style: TextStyle(
                         fontSize: 17,
                         fontFamily: 'Itim',
                       ),
                     ),
                     Text(
-                      lecture.endTime.format(context),
+                    DateFormat("jm").format(DateTime.parse(ts.startDayTime.split(' ')[0]+' '+ts.endDayTime.split(' ')[2])),
                       style: TextStyle(
                         fontSize: 17,
                         fontFamily: 'Itim',
@@ -55,57 +56,23 @@ class ScheduleInfoCard extends StatelessWidget {
           ),
           SizedBox(width: 10),
           Expanded(
-            flex: 5,
-            child: Column(
-              children: [
-                CustomCard(
-                  radius: 7,
-                  child: Text(
-                    lecture.type.toString().split('.')[1],
+            flex: 4,
+            child: CustomCard(
+              radius: 7,
+              child: Center(
+                child:FittedBox(
+                  fit: BoxFit.contain,
+                  child:Text(
+                    type.toString().split('.')[1],
                     style: TextStyle(
                       fontSize: 17,
                     ),
                   ),
-                  color: Theme.of(context).accentColor,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  margin: EdgeInsets.all(0),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomCard(
-                      child: GestureDetector(
-                        onPanDown: (details) {
-                          edit();
-                        },
-                        child: Icon(
-                          Icons.edit,
-                          size: 17,
-                        ),
-                      ),
-                      color: Colors.indigo,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                      margin: EdgeInsets.all(0),
-                    ),
-                    CustomCard(
-                      child: GestureDetector(
-                        onPanDown: (details) {
-                          delete();
-                        },
-                        child: Icon(
-                          Icons.delete,
-                          size: 17,
-                        ),
-                      ),
-                      color: Colors.indigo,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                      margin: EdgeInsets.all(0),
-                    ),
-                  ],
-                )
-              ],
+              ),
+              color: Theme.of(context).accentColor,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              margin: EdgeInsets.all(0),
             ),
           ),
         ],

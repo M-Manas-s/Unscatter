@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:unscatter/classes/Course.dart';
 import 'package:unscatter/classes/Lecture.dart';
 import 'package:unscatter/components/CustomCard.dart';
 import 'package:unscatter/components/ScheduleInfoCard.dart';
@@ -204,7 +203,7 @@ class _AddOrModifyState extends State<AddOrModify> {
                                     letterSpacing: 3,
                                     color: Colors.white),
                               ),
-                              onPressed: error==null ? () async {
+                              onPressed: error==null && name!=null ? () async {
                                 await FirebaseFirestore.instance
                                     .collection('FacultyCourses')
                                     .where('CourseName', isEqualTo: name.split(' ')[0])

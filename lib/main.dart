@@ -9,6 +9,7 @@ import 'package:unscatter/screens/Login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:unscatter/screens/Registration.dart';
+import 'package:unscatter/screens/AddOrModifyFaculty.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,7 @@ Future<void> main() async {
         RegistrationPage.id : (context) => RegistrationPage(),
         Dashboard.id : (context) => Dashboard(),
         AddOrModify.id : (context) => AddOrModify(),
+        AddOrModifyFaculty.id : (context) => AddOrModifyFaculty(),
         Delete.id : (context) => Delete(),
       },
       theme: kAppTheme,
@@ -51,17 +53,6 @@ class _LandingPageState extends State<LandingPage> {
     setState(() {
       email = prefs.getString('email') ?? ' ';
     });
-    print(email);
-    // if (  email!=null )
-    // {
-    //   Navigator.pushAndRemoveUntil(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (context) => LandingPage()
-    //       ),
-    //       ModalRoute.withName(LandingPage.id)
-    //   );
-    // }
   }
 
   @override
