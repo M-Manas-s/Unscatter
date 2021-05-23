@@ -41,9 +41,10 @@ class _ExperimentState extends State<Experiment> {
     // Call the user's CollectionReference to add a new user
     return timeSlots
         .add({
-      'CourseName' : 'CSE',
-      'CourseID' : '1021',
-      'Type': 'Lab'
+      'Block' : 'AB1',
+      'ClassNo' : '209',
+      'StartDayTime': DateFormat("yyyy-MM-dd - kk:mm").format(ad(l2,0)),
+      'EndDayTime' : DateFormat("yyyy-MM-dd - kk:mm").format(ad(le(l2),0)),
     })
         .then((value) => print("Added"))
         .catchError((error) => print("Failed to add user: $error"));

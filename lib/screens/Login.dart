@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return ModalProgressHUD(
       progressIndicator: SpinKitChasingDots(
-        color: Color(0xFF004C4C),
+        color: Theme.of(context).accentColor,
         size: 30.0,
       ),
       inAsyncCall: spinner,
