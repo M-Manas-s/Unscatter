@@ -413,80 +413,80 @@ class _AddOrModifyFacultyState extends State<AddOrModifyFaculty>
           ),
           Expanded(
             flex: 1,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.07,
-              width: MediaQuery.of(context).size.width,
-              color: Theme.of(context)
-                  .accentColor
-                  .withOpacity(slotsSelected ? 1.0 : 0.3),
-              child: GestureDetector(
-                onPanDown: slotsSelected
-                    ? (var x) async {
-                        String facid;
-                        await FirebaseFirestore.instance
-                            .collection('Faculty')
-                            .where('Email', isEqualTo: prefs.getString('email'))
-                            .get()
-                            .then((QuerySnapshot querySnapshot) {
-                          querySnapshot.docs.forEach((doc) {
-                            facid = doc['FacultyID'];
-                          });
-                        });
+            child: GestureDetector(
+              onPanDown: slotsSelected
+                  ? (var x) async {
+                String facid;
+                await FirebaseFirestore.instance
+                    .collection('Faculty')
+                    .where('Email', isEqualTo: prefs.getString('email'))
+                    .get()
+                    .then((QuerySnapshot querySnapshot) {
+                  querySnapshot.docs.forEach((doc) {
+                    facid = doc['FacultyID'];
+                  });
+                });
 
-                        await FirebaseFirestore.instance.collection('FacultyCourses')
-                            .add({
-                          'FacultyID': facid, // John Doe
-                          'CourseName': name.split(' ')[0], // Stokes and Sons
-                          'CourseID': name.split(' ')[1] ,
-                          'Type' : (classType == ClassType.Theory
-                              ? 'Theory'
-                              : 'Lab'),// 42
-                        })
-                            .then((value) => print("User Added"))
-                            .catchError((error) => print("Failed to add user: $error"));
+                await FirebaseFirestore.instance.collection('FacultyCourses')
+                    .add({
+                  'FacultyID': facid, // John Doe
+                  'CourseName': name.split(' ')[0], // Stokes and Sons
+                  'CourseID': name.split(' ')[1] ,
+                  'Type' : (classType == ClassType.Theory
+                      ? 'Theory'
+                      : 'Lab'),// 42
+                })
+                    .then((value) => print("User Added"))
+                    .catchError((error) => print("Failed to add user: $error"));
 
-                        String sdt;
-                        String edt;
-                        await FirebaseFirestore.instance
-                            .collection('CoursesTimeSlot')
-                            .where('CourseName', isEqualTo: name.split(' ')[0])
-                            .where('CourseID', isEqualTo: name.split(' ')[1])
-                            .where('Type', isEqualTo: ( classType== ClassType.Theory ? 'Theory' : 'Lab') )
-                            .get()
-                            .then((QuerySnapshot querySnapshot) {
-                          querySnapshot.docs.forEach((doc) {
-                            sdt = doc['StartDayTime'];
-                            edt = doc['EndDayTime'];
+                String sdt;
+                String edt;
+                await FirebaseFirestore.instance
+                    .collection('CoursesTimeSlot')
+                    .where('CourseName', isEqualTo: name.split(' ')[0])
+                    .where('CourseID', isEqualTo: name.split(' ')[1])
+                    .where('Type', isEqualTo: ( classType== ClassType.Theory ? 'Theory' : 'Lab') )
+                    .get()
+                    .then((QuerySnapshot querySnapshot) {
+                  querySnapshot.docs.forEach((doc) {
+                    sdt = doc['StartDayTime'];
+                    edt = doc['EndDayTime'];
 
-                          });
-                        });
+                  });
+                });
 
-                        String bno;
-                        String cno;
+                String bno;
+                String cno;
 
-                        await FirebaseFirestore.instance
-                            .collection('ClassTimeSlot')
-                            .where('EndDayTime', isEqualTo: edt)
-                            .where('StartDayTime', isEqualTo: sdt)
-                            .get()
-                            .then((QuerySnapshot querySnapshot) {
-                          querySnapshot.docs.forEach((doc) async {
-                            cno = doc['ClassNo'];
-                            bno = doc['Block'];
-                          });
-                        });
+                await FirebaseFirestore.instance
+                    .collection('ClassTimeSlot')
+                    .where('EndDayTime', isEqualTo: edt)
+                    .where('StartDayTime', isEqualTo: sdt)
+                    .get()
+                    .then((QuerySnapshot querySnapshot) {
+                  querySnapshot.docs.forEach((doc) async {
+                    cno = doc['ClassNo'];
+                    bno = doc['Block'];
+                  });
+                });
 
-                        await FirebaseFirestore.instance.collection('FacultyClasses')
-                            .add({
-                          'FacultyID': facid, // John Doe
-                          'ClassNo': cno, // Stokes and Sons
-                          'Block': bno ,
-                        })
-                            .then((value) => print("User Added"))
-                            .catchError((error) => print("Failed to add user: $error"));
-                        navigateBack(context);
-                      }
-                    : (var x) {},
+                await FirebaseFirestore.instance.collection('FacultyClasses')
+                    .add({
+                  'FacultyID': facid, // John Doe
+                  'ClassNo': cno, // Stokes and Sons
+                  'Block': bno ,
+                })
+                    .then((value) => print("User Added"))
+                    .catchError((error) => print("Failed to add user: $error"));
+                navigateBack(context);
+              }
+                  : (var x) {},
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.07,
+                width: MediaQuery.of(context).size.width,
+                color: Theme.of(context)
+                    .accentColor
+                    .withOpacity(slotsSelected ? 1.0 : 0.3),
                 child: Container(
                   child: Center(
                     child: Text(
