@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:unscatter/classes/Lecture.dart';
+import 'package:unscatter/classes/TimeSlot.dart';
 import 'package:unscatter/components/CustomCard.dart';
 import 'package:unscatter/components/ScheduleInfoCard.dart';
 import 'package:unscatter/constants/constants.dart';

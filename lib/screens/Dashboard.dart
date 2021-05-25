@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:unscatter/classes/TimeSlot.dart';
 import 'package:unscatter/components/DashboardCard.dart';
-import 'package:unicorndial/unicorndial.dart';
 import 'package:unscatter/constants/constants.dart';
 import 'package:unscatter/constants/enums.dart';
 import 'package:unscatter/screens/AddOrModify.dart';
@@ -8,19 +8,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unscatter/screens/AddOrModifyFaculty.dart';
 import 'package:unscatter/screens/Login.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
-List<Widget> list = [
-  WeekDayText(day: "MONDAY", date: "19th April"),
-  DashboardCard(
-    courseName: "CSE",
-    courseID: "2004",
-    time: "9:00 AM - 9:50 AM",
-    classType: ClassType.Theory,
-    facultyName: 'Vijay Kumar',
-    classroom: 'AB1 206',
-  ),
-];
 
 // ignore: must_be_immutable
 class Dashboard extends StatefulWidget {
@@ -37,14 +27,83 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
 
   SharedPreferences prefs;
+  List list = [];
+  bool loadingDB = true;
 
-  void sf() async{
+  void initializeDBread() async{
     prefs = await SharedPreferences.getInstance();
+    getData(prefs.getString('user'));
+  }
+
+  void getData(String user) async{
+    print(user);
+    switch(user){
+      case 'Faculty' :
+
+        String facid,fname;
+        await FirebaseFirestore.instance
+            .collection('Faculty')
+            .where('Email', isEqualTo: prefs.getString('email'))
+            .get()
+            .then((QuerySnapshot querySnapshot) {
+          querySnapshot.docs.forEach((doc) {
+            facid = doc['FacultyID'];
+            fname = doc['Name'];
+          });
+        });
+
+        print(facid);
+
+        await FirebaseFirestore.instance
+            .collection('CoursesTimeSlot')
+            .where('FacultyID', isEqualTo: facid)
+            .get()
+            .then((QuerySnapshot querySnapshot) {
+          querySnapshot.docs.forEach((doc) async {
+              TimeSlot ts = TimeSlot(startDayTime: doc['StartDayTime'],endDayTime: doc['EndDayTime']);
+              String cname = doc['CourseName'];
+              String cid = doc['CourseID'];
+              ClassType ct = doc['Type'] =='Theory' ? ClassType.Theory : ClassType.Lab;
+              String classInfo;
+              await FirebaseFirestore.instance
+                  .collection('ClassTimeSlot')
+                  .where('EndDayTime', isEqualTo: ts.endDayTime)
+                  .where('StartDayTime', isEqualTo: ts.startDayTime)
+                  .get()
+                  .then((QuerySnapshot querySnapshot) {
+                querySnapshot.docs.forEach((doc) {
+                  classInfo = doc['Block'] + ' ' + doc['ClassNo'];
+                });
+              });
+              String time = DateFormat("jm").format(DateTime.parse(ts.startDayTime.split(' ')[0]+' '+ts.startDayTime.split(' ')[2]))+' - '
+              + DateFormat("jm").format(DateTime.parse(ts.startDayTime.split(' ')[0]+' '+ts.endDayTime.split(' ')[2]));
+              setState(() {
+                print(
+                  "courseName: $cname, courseID: $cid, classType: $ct, classroom: $classInfo, time: $time (${ts.startDayTime.split(' ')[0]}), facultyName: $fname"
+                );
+                list.add(DashboardCard(
+                  courseName: cname,
+                  courseID: cid,
+                  classType: ct,
+                  classroom: classInfo,
+                  time: time,
+                  facultyName: fname,
+                ));
+              });
+
+          });
+        });
+        setState(() {
+          print(list.length);
+          loadingDB = false;
+        });
+        break;
+    }
   }
 
   @override
   void initState() {
-    sf();
+    initializeDBread();
     super.initState();
   }
 
@@ -88,6 +147,7 @@ class _DashboardState extends State<Dashboard> {
         margin: EdgeInsets.only(top: 20),
         child: Column(
           children: [
+            loadingDB ? Container() :
             ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,

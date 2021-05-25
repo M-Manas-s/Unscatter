@@ -35,16 +35,16 @@ class _ExperimentState extends State<Experiment> {
   }
 
   Future<void> addUser() {
-    CollectionReference timeSlots = FirebaseFirestore.instance.collection('Courses');
+    CollectionReference timeSlots = FirebaseFirestore.instance.collection('ClassTimeSlot');
 
     // DateFormat("yyyy-MM-dd - kk:mm").format(ad(t1,4))
     // Call the user's CollectionReference to add a new user
     return timeSlots
         .add({
       'Block' : 'AB1',
-      'ClassNo' : '209',
-      'StartDayTime': DateFormat("yyyy-MM-dd - kk:mm").format(ad(l2,0)),
-      'EndDayTime' : DateFormat("yyyy-MM-dd - kk:mm").format(ad(le(l2),0)),
+      'ClassNo' : '608',
+      'StartDayTime': DateFormat("yyyy-MM-dd - kk:mm").format(ad(t2,2)),
+      'EndDayTime' : DateFormat("yyyy-MM-dd - kk:mm").format(ad(te(t2),2)),
     })
         .then((value) => print("Added"))
         .catchError((error) => print("Failed to add user: $error"));
