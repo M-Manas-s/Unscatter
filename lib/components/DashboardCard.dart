@@ -1,28 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:unscatter/classes/DashBoardClass.dart';
 import 'package:unscatter/components/CustomCard.dart';
 import 'package:unscatter/constants/constants.dart';
 import 'package:unscatter/constants/enums.dart';
 
 class DashboardCard extends StatefulWidget {
-  final String courseName;
-  final String courseID;
-  final String time;
-  final ClassType classType;
-  final SpecialClass specialClass;
-  final String facultyName;
-  final String classroom;
-
-  DashboardCard(
-    {
-      @required this.courseName,
-      @required this.courseID,
-      @required this.time,
-      @required this.classType,
-      @required this.facultyName,
-      @required this.classroom,
-    this.specialClass = SpecialClass.Standard});
-
+  final DashBoardClass dbc;
+  DashboardCard({@required this.dbc,});
+  
   @override
   _DashboardCardState createState() => _DashboardCardState();
 }
@@ -31,7 +17,7 @@ class _DashboardCardState extends State<DashboardCard> {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      color: widget.specialClass == SpecialClass.Extra ? Theme.of(context).accentColor : Color(0xFF282B4E),
+      color: widget.dbc.specialClass == SpecialClass.Extra ? Theme.of(context).accentColor : Color(0xFF282B4E),
       child: Row(
         children: [
           Expanded(
@@ -41,15 +27,15 @@ class _DashboardCardState extends State<DashboardCard> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  "${widget.courseName} ${widget.courseID}",
+                  "${widget.dbc.courseName} ${widget.dbc.courseID}",
                   style: kCourseNameDB,
                 ),
-                Text(widget.time, style: kTimeDB),
+                Text(widget.dbc.time, style: kTimeDB),
                 SizedBox(height: 5,),
                 Row(
                   children: [
-                    Text(widget.classroom+ ' - Prof. ', style: kTimeDB),
-                    Text(widget.facultyName, style: kTimeDB),
+                    Text(widget.dbc.classroom+ ' - Prof. ', style: kTimeDB),
+                    Text(widget.dbc.facultyName, style: kTimeDB),
                   ],
                 ),
 
@@ -69,7 +55,7 @@ class _DashboardCardState extends State<DashboardCard> {
                       (Set<MaterialState> states) {
                         if (states.contains(MaterialState.pressed))
                           return Theme.of(context).accentColor;
-                        return widget.specialClass != SpecialClass.Extra
+                        return widget.dbc.specialClass != SpecialClass.Extra
                             ? Theme.of(context).accentColor
                             : Color(0xFF282B4E); // Use the component's default.
                       },
@@ -80,7 +66,7 @@ class _DashboardCardState extends State<DashboardCard> {
                             side: BorderSide(color: Colors.red))),
                   ),
                   child: Text(
-                    widget.classType == ClassType.Theory ? 'T' : 'L',
+                    widget.dbc.classType == ClassType.Theory ? 'T' : 'L',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 17,
