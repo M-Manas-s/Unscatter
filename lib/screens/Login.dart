@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:unscatter/constants/constants.dart';
-import 'package:unscatter/screens/Dashboard.dart';
 import 'package:unscatter/screens/Registration.dart';
 import 'package:unscatter/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,7 +20,6 @@ class _LoginPageState extends State<LoginPage> {
   String errorText;
   String email;
   String password;
-  String number;
   bool spinner = false;
   bool state = true;
   bool absorb=false;
@@ -61,6 +59,10 @@ class _LoginPageState extends State<LoginPage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 50.0, right: 50.0,bottom: 50.0),
+                                  child: Image.asset('assets/Icon/icon.png'),
+                                ),
                                 Padding(
                                   padding: EdgeInsets.all(10),
                                   child: TextFormField(

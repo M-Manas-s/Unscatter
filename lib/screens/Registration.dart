@@ -27,7 +27,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   String address;
   String email;
   String password;
-  String number;
+  List<String> number = [];
   bool spinner = false;
   bool state = true;
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -102,7 +102,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           child: TextFormField(
                               keyboardType: TextInputType.number,
                               onChanged: (value) {
-                                number = value.trim();
+                                number = value.trim().split(',');
                               },
                               cursorColor: Theme.of(context).accentColor,
                               textAlign: TextAlign.center,
@@ -228,11 +228,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                       .add({
                                     'Name': "$fullName",
                                     "Regno": "$regno",
-                                    "Mobile no." : number,
                                     "DOB" : dob,
                                     "Address" : address,
                                     "Email" : email,
                                   });
+                                  for ( int i=0; i<number.length; i++ ) {
+                                    FirebaseFirestore.instance
+                                        .collection('StudentPhoneNo')
+                                        .add({
+                                      "Regno": "$regno",
+                                      "PhoneNumber" : number[i]
+                                    });
+                                  }
                                   SharedPreferences prefs = await SharedPreferences.getInstance();
                                   prefs.setString('email', '$email');
                                   prefs.setString('user','Student');
@@ -264,11 +271,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                       .add({
                                     'Name': "$fullName",
                                     "FacultyID": "$regno",
-                                    "Mobile no." : number,
                                     "DOB" : dob,
                                     "Address" : address,
                                     "Email" : email,
                                   });
+                                  for ( int i=0; i<number.length; i++ ) {
+                                    FirebaseFirestore.instance
+                                        .collection('StudentPhoneNo')
+                                        .add({
+                                      "FacultyID": "$regno",
+                                      "PhoneNumber" : number[i]
+                                    });
+                                  }
                                   SharedPreferences prefs = await SharedPreferences.getInstance();
                                   prefs.setString('email', '$email');
                                   prefs.setString('user','Faculty');

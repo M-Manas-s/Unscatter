@@ -34,20 +34,42 @@ class _ExperimentState extends State<Experiment> {
     return dt.add(Duration(days: d));
   }
 
-  Future<void> addUser() {
+  Future<void> addUser() async{
     CollectionReference timeSlots = FirebaseFirestore.instance.collection('ClassTimeSlot');
 
     // DateFormat("yyyy-MM-dd - kk:mm").format(ad(t1,4))
     // Call the user's CollectionReference to add a new user
-    return timeSlots
-        .add({
-      'Block' : 'AB1',
-      'ClassNo' : '608',
-      'StartDayTime': DateFormat("yyyy-MM-dd - kk:mm").format(ad(t2,2)),
-      'EndDayTime' : DateFormat("yyyy-MM-dd - kk:mm").format(ad(te(t2),2)),
-    })
-        .then((value) => print("Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+    // return timeSlots
+    //     .add({
+    //   'Block' : 'AB1',
+    //   'ClassNo' : '608',
+    //   'StartDayTime': DateFormat("yyyy-MM-dd - kk:mm").format(ad(t2,2)),
+    //   'EndDayTime' : DateFormat("yyyy-MM-dd - kk:mm").format(ad(te(t2),2)),
+    // })
+    //     .then((value) => print("Added"))
+    //     .catchError((error) => print("Failed to add user: $error"));
+
+    // await FirebaseFirestore.instance.collection('ClassTimeSlot')
+    //     .add({
+    //     'Block' : 'AB1',
+    //     'ClassNo' : '212',
+    //     'StartDayTime' : DateFormat("yyyy-MM-dd - kk:mm").format(ad(l2,2)),
+    //     'EndDayTime' : DateFormat("yyyy-MM-dd - kk:mm").format(ad(le(l2),2)),
+    // })
+    //     .then((value) => print("User Added"))
+    //     .catchError((error) => print("Failed to add user: $error"));
+
+    await FirebaseFirestore.instance
+        .collection('ClassTimeSlot')
+        .where('EndDayTime', isEqualTo: '2021-05-19 - 11:35')
+        .where('StartDayTime', isEqualTo: '2021-05-19 - 10:45')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        print("Found");
+      });
+    });
+
   }
 
   @override

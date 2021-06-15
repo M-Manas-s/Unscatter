@@ -70,14 +70,16 @@ String dobValidator(value) {
 }
 
 String numberValidator(value) {
+  String pattern = r'^\d[,\d]*\d$';
+  RegExp regex = new RegExp(pattern);
   if (value.isEmpty) {
     return "Please Enter Number";
-  } else if (value.length < 10 || value.length > 10) {
-    print(value.length);
+  } else if (!regex.hasMatch(value)) {
     return "Enter A Valid Mobile Number ";
   }
   return null;
 }
+
 
 String passwordValidator(value) {
 

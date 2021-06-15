@@ -8,10 +8,13 @@ import 'package:unscatter/screens/AddOrModify.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unscatter/screens/AddOrModifyFaculty.dart';
+import 'package:unscatter/screens/Delete.dart';
 import 'package:unscatter/screens/Login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:unicorndial/unicorndial.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Dashboard extends StatefulWidget {
   static String id = "Dashboard";
@@ -111,8 +114,6 @@ class _DashboardState extends State<Dashboard> {
           });
         });
 
-        print(facid);
-
         await FirebaseFirestore.instance
             .collection('CoursesTimeSlot')
             .where('FacultyID', isEqualTo: facid)
@@ -172,8 +173,17 @@ class _DashboardState extends State<Dashboard> {
         list.sort((a, b) => a.ts.startDayTime.compareTo(b.ts.startDayTime));
 
         setState(() {
-          dispList.add(WeekDayText(day: getWeekdayString(list[0].weekday)));
-          dispList.add(DashboardCard(dbc: list[0]));
+          if ( list.length!=0 ) {
+            dispList.add(WeekDayText(day: getWeekdayString(list[0].weekday)));
+            dispList.add(DashboardCard(dbc: list[0]));
+          }
+          else
+            dispList.add(
+              Center(
+                child : Text("No Courses Undertaken!",
+                style: TextStyle(fontSize: 20),)
+              )
+            );
           for (int i = 1; i < list.length; i++) {
             if (list[i].weekday != list[i - 1].weekday)
               dispList.add(WeekDayText(day: getWeekdayString(list[i].weekday)));
@@ -213,7 +223,6 @@ class _DashboardState extends State<Dashboard> {
           });
         });
 
-        print(list[0].classType.toString().split('.')[1] );
 
         for (int i=0; i<list.length; i++) {
 
@@ -281,8 +290,16 @@ class _DashboardState extends State<Dashboard> {
           }
         listFinal.sort((a, b) => a.ts.startDayTime.compareTo(b.ts.startDayTime));
         setState(() {
-          dispList.add(WeekDayText(day: getWeekdayString(listFinal[0].weekday)));
-          dispList.add(DashboardCard(dbc: listFinal[0]));
+          if ( listFinal.length!=0 ) {
+            dispList.add(
+                WeekDayText(day: getWeekdayString(listFinal[0].weekday)));
+            dispList.add(DashboardCard(dbc: listFinal[0]));
+          }
+          else
+            dispList.add(Center(
+                child : Text("No Courses Undertaken!",
+                  style: TextStyle(fontSize: 20),)
+            ));
           for (int i = 1; i < listFinal.length; i++) {
             if (listFinal[i].weekday != listFinal[i - 1].weekday)
               dispList.add(WeekDayText(day: getWeekdayString(listFinal[i].weekday)));
@@ -306,116 +323,128 @@ class _DashboardState extends State<Dashboard> {
     Size query = MediaQuery.of(context).size;
     FirebaseAuth _auth = FirebaseAuth.instance;
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 8,
-        title: Text("Unscatter", style: kAppBarTitleStyle),
-        centerTitle: true,
-        actions: [
-          PopupMenuButton<int>(
-              itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[
-                    PopupMenuItem<int>(value: 1, child: Text('Sign Out')),
-                  ],
-              onSelected: (int value) async {
-                await _auth.signOut();
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                prefs.remove('email');
-                prefs.remove('user');
-                Navigator.pushNamed(context, LoginPage.id);
-              }),
-        ],
+    return ModalProgressHUD(
+      progressIndicator: SpinKitChasingDots(
+        color: Theme.of(context).accentColor,
+        size: 30.0,
       ),
-      floatingActionButton: UnicornDialer(
-        onMainButtonPressed: () {},
-        backgroundColor: Colors.black38,
-        parentButtonBackground: Theme.of(context).accentColor,
-        orientation: UnicornOrientation.VERTICAL,
-        parentButton: widget.startSelecting
-            ? Icon(Icons.assignment, color: Colors.white)
-            : Icon(Icons.add, color: Colors.white),
-        childButtons: [
-          UnicornButton(
-            hasLabel: true,
-            labelText: "Add",
-            currentButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.pushNamed(context, prefs.getString('user')=='Faculty' ? AddOrModifyFaculty.id : AddOrModify.id);
-              },
-              heroTag: "Add",
-              backgroundColor: Color(0xFFE45465),
-              mini: true,
-              child: Icon(Icons.add, color: Colors.white),
-            ),
+      inAsyncCall: loadingDB,
+      child: WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 8,
+            title: Text("Unscatter", style: kAppBarTitleStyle),
+            centerTitle: true,
+            actions: [
+              PopupMenuButton<int>(
+                  itemBuilder: (BuildContext context) => <PopupMenuItem<int>>[
+                        PopupMenuItem<int>(value: 1, child: Text('Sign Out')),
+                      ],
+                  onSelected: (int value) async {
+                    await _auth.signOut();
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    prefs.remove('email');
+                    prefs.remove('user');
+                    Navigator.pushNamed(context, LoginPage.id);
+                  }),
+            ],
           ),
-          UnicornButton(
-            hasLabel: true,
-            labelText: "Remove",
-            currentButton: FloatingActionButton(
-              onPressed: () {},
-              heroTag: "Remove",
-              backgroundColor: Color(0xFFE45465),
-              mini: true,
-              child: Icon(Icons.delete, color: Colors.white),
-            ),
-          ),
-        ],
-      ),
-      body: Container(
-        height: query.height,
-        margin: EdgeInsets.symmetric(vertical: 20),
-        child: loadingDB
-            ? Container()
-            : ListView.builder(
-                physics: ScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: dispList.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(
-                        left: query.width * 0.025, right: query.width * 0.025),
-                    child: GestureDetector(
-                      onLongPress: () {
-                        setState(() {
-                          if (!widget.startSelecting) {
-                            widget.startSelecting = true;
-                            widget.selectedItem.add(index);
-                          }
-                        });
-                      },
-                      onPanDown: (var x) {
-                        if (widget.startSelecting)
-                          setState(() {
-                            if (widget.selectedItem.contains(index))
-                              widget.selectedItem
-                                  .removeWhere((element) => element == index);
-                            else
-                              widget.selectedItem.add(index);
-                            if (widget.selectedItem.length == 0)
-                              widget.startSelecting = false;
-                          });
-                      },
-                      child: Container(
-                        child: Row(children: [
-                          AnimatedContainer(
-                            duration: Duration(milliseconds: 200),
-                            width:
-                                widget.startSelecting ? 0.1 * query.width : 0,
-                            child: !widget.heading.contains(index) &&
-                                    widget.startSelecting
-                                ? Checkbox(
-                                    value: widget.selectedItem.contains(index),
-                                    onChanged: (bool value) {},
-                                  )
-                                : Container(),
-                          ),
-                          Expanded(flex: 8, child: dispList[index]),
-                        ]),
-                      ),
-                    ),
-                  );
-                },
+          floatingActionButton: UnicornDialer(
+            onMainButtonPressed: () {},
+            backgroundColor: Colors.black38,
+            parentButtonBackground: Theme.of(context).accentColor,
+            orientation: UnicornOrientation.VERTICAL,
+            parentButton: widget.startSelecting
+                ? Icon(Icons.assignment, color: Colors.white)
+                : Icon(Icons.add, color: Colors.white),
+            childButtons: [
+              UnicornButton(
+                hasLabel: true,
+                labelText: "Add",
+                currentButton: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, prefs.getString('user')=='Faculty' ? AddOrModifyFaculty.id : AddOrModify.id);
+                  },
+                  heroTag: "Add",
+                  backgroundColor: Color(0xFFE45465),
+                  mini: true,
+                  child: Icon(Icons.add, color: Colors.white),
+                ),
               ),
+              UnicornButton(
+                hasLabel: true,
+                labelText: "Remove",
+                currentButton: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, Delete.id);
+                  },
+                  heroTag: "Remove",
+                  backgroundColor: Color(0xFFE45465),
+                  mini: true,
+                  child: Icon(Icons.delete, color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+          body: Container(
+            height: query.height,
+            margin: EdgeInsets.symmetric(vertical: 20),
+            child: loadingDB
+                ? Container()
+                : ListView.builder(
+                    physics: ScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: dispList.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: EdgeInsets.only(
+                            left: query.width * 0.025, right: query.width * 0.025),
+                        child: GestureDetector(
+                          onLongPress: () {
+                            setState(() {
+                              if (!widget.startSelecting) {
+                                widget.startSelecting = true;
+                                widget.selectedItem.add(index);
+                              }
+                            });
+                          },
+                          onPanDown: (var x) {
+                            if (widget.startSelecting)
+                              setState(() {
+                                if (widget.selectedItem.contains(index))
+                                  widget.selectedItem
+                                      .removeWhere((element) => element == index);
+                                else
+                                  widget.selectedItem.add(index);
+                                if (widget.selectedItem.length == 0)
+                                  widget.startSelecting = false;
+                              });
+                          },
+                          child: Container(
+                            child: Row(children: [
+                              AnimatedContainer(
+                                duration: Duration(milliseconds: 200),
+                                width:
+                                    widget.startSelecting ? 0.1 * query.width : 0,
+                                child: !widget.heading.contains(index) &&
+                                        widget.startSelecting
+                                    ? Checkbox(
+                                        value: widget.selectedItem.contains(index),
+                                        onChanged: (bool value) {},
+                                      )
+                                    : Container(),
+                              ),
+                              Expanded(flex: 8, child: dispList[index]),
+                            ]),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ),
       ),
     );
   }
