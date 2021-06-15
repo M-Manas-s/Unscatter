@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:unscatter/classes/DashBoardClass.dart';
+import 'package:unscatter/classes/TimeSlot.dart';
 import 'package:unscatter/components/CustomCard.dart';
 import 'package:unscatter/constants/constants.dart';
 import 'package:unscatter/screens/Dashboard.dart';
@@ -316,6 +318,71 @@ class _AddOrModifyState extends State<AddOrModify> {
                                       });
 
                                       if (proceed) {
+
+                                        List<String> regslots = [];
+                                        List<TimeSlot> tsl = [];
+
+                                        List<DashBoardClass> dbc = [];
+
+                                        await FirebaseFirestore.instance
+                                            .collection('StudentCourses')
+                                            .where('Regno', isEqualTo: regno)
+                                            .get()
+                                            .then((QuerySnapshot querySnapshot) {
+                                          querySnapshot.docs.forEach((doc) {
+                                            dbc.add(DashBoardClass(
+                                              facid: doc['FacultyID'],
+                                              courseID: doc['CourseID'],
+                                              courseName: doc['CourseName'],
+                                              classType: doc['Type'] == 'Theory' ? ClassType.Theory : ClassType.Lab
+                                            ));
+                                          });
+                                        });
+
+                                        print("Reg courses");
+                                        dbc.forEach((element) { print("${element.courseName} ${element.courseID} with ${element.facid}");});
+
+                                        for (int i = 0; i < dbc.length; i++)
+                                        {
+                                          await FirebaseFirestore.instance
+                                              .collection('CoursesTimeSlot')
+                                              .where('FacultyID', isEqualTo: dbc[i].facid)
+                                              .where('CourseName', isEqualTo: dbc[i].courseName)
+                                              .where('CourseID', isEqualTo: dbc[i].courseID)
+                                              .where('Type', isEqualTo: (dbc[i].classType ==
+                                              ClassType.Theory
+                                              ? 'Theory'
+                                              : 'Lab'))
+                                              .get()
+                                              .then((QuerySnapshot querySnapshot) {
+                                            querySnapshot.docs.forEach((doc) {
+                                              print(doc['FacultyID']);
+                                              tsl.add(TimeSlot(startDayTime: doc['StartDayTime'],
+                                                  endDayTime: doc['EndDayTime']));
+                                            });
+                                          });
+                                        }
+
+                                        print("Found ${tsl.length} timeslots");
+
+
+                                        for ( int i=0; i<tsl.length; i++ )
+                                        {
+                                          await FirebaseFirestore.instance
+                                              .collection('TimeSlot')
+                                              .where('EndDayTime', isEqualTo: tsl[i].endDayTime)
+                                              .where('StartDayTime', isEqualTo: tsl[i].startDayTime)
+                                              .get()
+                                              .then((QuerySnapshot querySnapshot) {
+                                            querySnapshot.docs.forEach((doc) {
+                                              regslots.add(doc['Slot']);
+                                            });
+                                          });
+                                        }
+
+                                        print("Already reg slots");
+                                        regslots.forEach((element) { print(element);});
+
                                         await FirebaseFirestore.instance
                                             .collection('FacultyCourses')
                                             .where('CourseName',
@@ -331,7 +398,6 @@ class _AddOrModifyState extends State<AddOrModify> {
                                             .then(
                                                 (QuerySnapshot querySnapshot) {
                                           querySnapshot.docs.forEach((doc) {
-                                            print(doc["FacultyID"]);
                                             Faculty f =
                                                 Faculty(ID: doc["FacultyID"]);
                                             list.add(f);
@@ -354,7 +420,6 @@ class _AddOrModifyState extends State<AddOrModify> {
                                                 (QuerySnapshot querySnapshot) {
                                           querySnapshot.docs
                                               .forEach((doc) async {
-                                            print(doc['StartDayTime']);
                                             await FirebaseFirestore.instance
                                                 .collection('TimeSlot')
                                                 .where('StartDayTime',
@@ -399,6 +464,16 @@ class _AddOrModifyState extends State<AddOrModify> {
                                             });
                                           });
                                         });
+
+                                        for ( int i=0; i<regslots.length; i++ )
+                                          {
+                                            for ( int j=0; j<list.length; j++ )
+                                                if ( list[j].slot == regslots[i] )
+                                                  {
+                                                    list.removeAt(j);
+                                                    break;
+                                                  }
+                                          }
 
                                         if (list.length == 0)
                                           setState(() {

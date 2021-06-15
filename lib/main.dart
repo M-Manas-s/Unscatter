@@ -4,6 +4,7 @@ import 'package:unscatter/constants/constants.dart';
 import 'package:unscatter/screens/Dashboard.dart';
 import 'package:unscatter/screens/AddOrModify.dart';
 import 'package:unscatter/screens/Delete.dart';
+import 'package:unscatter/screens/Experiment.dart';
 import 'package:unscatter/screens/Login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';

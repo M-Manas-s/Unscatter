@@ -147,12 +147,13 @@ class _LoginPageState extends State<LoginPage> {
                                                 .where('Email', isEqualTo: email)
                                                 .get()
                                                 .then((QuerySnapshot querySnapshot) {
-                                              if ( querySnapshot==null ) {
+                                              if ( querySnapshot.docs.length==0 ) {
                                                 print("Not a Student");
                                                 throw Exception(
                                                     "Not a Student");
                                               }
                                             });
+
 
                                             SharedPreferences prefs = await SharedPreferences.getInstance();
                                             prefs.setString('email', '$email');
@@ -185,24 +186,29 @@ class _LoginPageState extends State<LoginPage> {
                                             spinner = true;
                                           });
                                           try {
-                                            var user = await auth.signInWithEmailAndPassword(
-                                                email: email, password: password);
-
+                                            var user;
                                             await FirebaseFirestore.instance
                                                 .collection('Faculty')
                                                 .where("Email", isEqualTo: email)
                                                 .get()
-                                                .then((QuerySnapshot querySnapshot) {
-                                              if ( querySnapshot==null ) {
+                                                .then((QuerySnapshot querySnapshot) async{
+                                              if ( querySnapshot.docs.length==0 ) {
                                                 print("Not a Faculty");
                                                 throw Exception(
                                                     "Not a Faculty");
                                               }
+                                              setState(() {
+                                                spinner=false;
+                                              });
                                             });
+
+                                            user = await auth.signInWithEmailAndPassword(
+                                                email: email, password: password);
 
                                             SharedPreferences prefs = await SharedPreferences.getInstance();
                                             prefs.setString('email', '$email');
                                             prefs.setString('user','Faculty');
+
                                             if (user != null) {
                                               Navigator.pushAndRemoveUntil(
                                                   context,

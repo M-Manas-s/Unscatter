@@ -376,6 +376,37 @@ class _AddOrModifyFacultyState extends State<AddOrModifyFaculty>
                             });
                             return;
                           }
+
+                          List<String> regslots = [];
+                          List<TimeSlot> tsl = [];
+
+                          await FirebaseFirestore.instance
+                              .collection('CoursesTimeSlot')
+                              .where('FacultyID', isEqualTo: facid)
+                              .get()
+                              .then((QuerySnapshot querySnapshot) {
+                                querySnapshot.docs.forEach((doc) {
+                                  tsl.add(TimeSlot(startDayTime: doc['StartDayTime'], endDayTime: doc['EndDayTime']));
+                                });
+                          });
+
+                          for ( int i=0; i<tsl.length; i++ )
+                            {
+                              await FirebaseFirestore.instance
+                                  .collection('TimeSlot')
+                                  .where('EndDayTime', isEqualTo: tsl[i].endDayTime)
+                                  .where('StartDayTime', isEqualTo: tsl[i].startDayTime)
+                                  .get()
+                                  .then((QuerySnapshot querySnapshot) {
+                                querySnapshot.docs.forEach((doc) {
+                                  regslots.add(doc['Slot']);
+                                });
+                              });
+                            }
+
+                          print("Already reg slots");
+                          regslots.forEach((element) { print(element);});
+
                           await FirebaseFirestore.instance
                               .collection('TimeSlot')
                               .get()
@@ -383,10 +414,10 @@ class _AddOrModifyFacultyState extends State<AddOrModifyFaculty>
                             querySnapshot.docs.forEach((doc) {
                               if (!list.contains(doc['Slot'])) {
                                 if (classType == ClassType.Theory &&
-                                    doc['Slot'][0] != 'L')
+                                    doc['Slot'][0] != 'L' && !regslots.contains(doc['Slot']))
                                   list.add(doc['Slot']);
                                 else if (classType == ClassType.Lab &&
-                                    doc['Slot'][0] == 'L')
+                                    doc['Slot'][0] == 'L' && !regslots.contains(doc['Slot']))
                                   list.add(doc['Slot']);
                               }
                             });
