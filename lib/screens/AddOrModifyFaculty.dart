@@ -366,8 +366,16 @@ class _AddOrModifyFacultyState extends State<AddOrModifyFaculty>
                             }
                           });
 
-                          if (!found) return;
-
+                          if (!found) {
+                            setState(() {
+                              spinner = false;
+                              if (list.length == 0)
+                                error = "Course Not Found";
+                              else
+                                slotsLoaded = true;
+                            });
+                            return;
+                          }
                           await FirebaseFirestore.instance
                               .collection('TimeSlot')
                               .get()

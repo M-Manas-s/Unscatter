@@ -18,8 +18,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Dashboard extends StatefulWidget {
   static String id = "Dashboard";
-
-  bool startSelecting = false;
   List<int> selectedItem = [];
   List<int> heading = [0];
 
@@ -355,9 +353,7 @@ class _DashboardState extends State<Dashboard> {
             backgroundColor: Colors.black38,
             parentButtonBackground: Theme.of(context).accentColor,
             orientation: UnicornOrientation.VERTICAL,
-            parentButton: widget.startSelecting
-                ? Icon(Icons.assignment, color: Colors.white)
-                : Icon(Icons.add, color: Colors.white),
+            parentButton: Icon(Icons.add, color: Colors.white),
             childButtons: [
               UnicornButton(
                 hasLabel: true,
@@ -401,44 +397,10 @@ class _DashboardState extends State<Dashboard> {
                       return Container(
                         margin: EdgeInsets.only(
                             left: query.width * 0.025, right: query.width * 0.025),
-                        child: GestureDetector(
-                          onLongPress: () {
-                            setState(() {
-                              if (!widget.startSelecting) {
-                                widget.startSelecting = true;
-                                widget.selectedItem.add(index);
-                              }
-                            });
-                          },
-                          onPanDown: (var x) {
-                            if (widget.startSelecting)
-                              setState(() {
-                                if (widget.selectedItem.contains(index))
-                                  widget.selectedItem
-                                      .removeWhere((element) => element == index);
-                                else
-                                  widget.selectedItem.add(index);
-                                if (widget.selectedItem.length == 0)
-                                  widget.startSelecting = false;
-                              });
-                          },
-                          child: Container(
-                            child: Row(children: [
-                              AnimatedContainer(
-                                duration: Duration(milliseconds: 200),
-                                width:
-                                    widget.startSelecting ? 0.1 * query.width : 0,
-                                child: !widget.heading.contains(index) &&
-                                        widget.startSelecting
-                                    ? Checkbox(
-                                        value: widget.selectedItem.contains(index),
-                                        onChanged: (bool value) {},
-                                      )
-                                    : Container(),
-                              ),
-                              Expanded(flex: 8, child: dispList[index]),
-                            ]),
-                          ),
+                        child: Container(
+                          child: Row(children: [
+                            Expanded(flex: 8, child: dispList[index]),
+                          ]),
                         ),
                       );
                     },

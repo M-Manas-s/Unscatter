@@ -65,7 +65,7 @@ String dobValidator(value) {
   if (value.isEmpty) {
     return "Please Enter Text";
   }else if (!regex.hasMatch(value)) {
-    return "Please USe DD/MM/YYYY";
+    return "Please Use DD/MM/YYYY";
   }
 }
 
