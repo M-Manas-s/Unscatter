@@ -186,7 +186,8 @@ class _LoginPageState extends State<LoginPage> {
                                             spinner = true;
                                           });
                                           try {
-                                            var user;
+                                            var user = await auth.signInWithEmailAndPassword(
+                                                email: email, password: password);
                                             await FirebaseFirestore.instance
                                                 .collection('Faculty')
                                                 .where("Email", isEqualTo: email)
@@ -194,16 +195,14 @@ class _LoginPageState extends State<LoginPage> {
                                                 .then((QuerySnapshot querySnapshot) async{
                                               if ( querySnapshot.docs.length==0 ) {
                                                 print("Not a Faculty");
-                                                throw Exception(
-                                                    "Not a Faculty");
+                                                throw "Exception2";
                                               }
                                               setState(() {
                                                 spinner=false;
                                               });
                                             });
 
-                                            user = await auth.signInWithEmailAndPassword(
-                                                email: email, password: password);
+
 
                                             SharedPreferences prefs = await SharedPreferences.getInstance();
                                             prefs.setString('email', '$email');
@@ -220,6 +219,13 @@ class _LoginPageState extends State<LoginPage> {
                                             }
                                           }
                                           on Exception{
+                                            setState(() {
+                                              spinner = false;
+                                              errorText = "Wrong Email/Password";
+                                            });
+                                          }
+                                          catch (Exception2) {
+                                            print(Exception2);
                                             setState(() {
                                               spinner = false;
                                               errorText = "Wrong Email/Password";

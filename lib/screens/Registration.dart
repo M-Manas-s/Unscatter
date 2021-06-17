@@ -37,7 +37,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return ModalProgressHUD(
       progressIndicator: SpinKitChasingDots(
-        color: Color(0xFF004C4C),
+        color: Theme.of(context).accentColor,
         size: 30.0,
       ),
       inAsyncCall: spinner,
@@ -275,7 +275,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   });
                                   for ( int i=0; i<number.length; i++ ) {
                                     FirebaseFirestore.instance
-                                        .collection('StudentPhoneNo')
+                                        .collection('FacultyPhoneNo')
                                         .add({
                                       "FacultyID": "$regno",
                                       "PhoneNumber" : number[i]

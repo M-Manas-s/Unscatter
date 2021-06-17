@@ -326,109 +326,124 @@ class _AddOrModifyFacultyState extends State<AddOrModifyFaculty>
                               .then((QuerySnapshot querySnapshot) {
                             if (querySnapshot.size == 0) {
                               setState(() {
-                                found = false;
                                 error = "Course Not Found";
+                                found = false;
                               });
                             }
                           });
 
                           String facid;
-                          await FirebaseFirestore.instance
-                              .collection('Faculty')
-                              .where('Email',
-                              isEqualTo: prefs.getString('email'))
-                              .get()
-                              .then((QuerySnapshot querySnapshot) {
-                            querySnapshot.docs.forEach((doc) {
-                              facid = doc['FacultyID'];
-                            });
-                          });
 
-                          await FirebaseFirestore.instance
-                              .collection('FacultyCourses')
-                              .where('CourseName',
-                              isEqualTo: name.split(' ')[0])
-                              .where('CourseID',
-                              isEqualTo: name.split(' ')[1])
-                              .where('Type',
-                              isEqualTo:
-                              (classType == ClassType.Theory
-                                  ? 'Theory'
-                                  : 'Lab'))
-                              .where('FacultyID', isEqualTo: facid)
-                              .get()
-                              .then((QuerySnapshot querySnapshot) {
-                            if (querySnapshot.size != 0) {
-                              setState(() {
-                                found = false;
-                                error = "Already Registered";
+                          if ( found ) {
+                            await FirebaseFirestore.instance
+                                .collection('Faculty')
+                                .where('Email',
+                                isEqualTo: prefs.getString('email'))
+                                .get()
+                                .then((QuerySnapshot querySnapshot) {
+                              querySnapshot.docs.forEach((doc) {
+                                facid = doc['FacultyID'];
                               });
-                            }
-                          });
+                            });
+
+                            await FirebaseFirestore.instance
+                                .collection('FacultyCourses')
+                                .where('CourseName',
+                                isEqualTo: name.split(' ')[0])
+                                .where('CourseID',
+                                isEqualTo: name.split(' ')[1])
+                                .where('Type',
+                                isEqualTo:
+                                (classType == ClassType.Theory
+                                    ? 'Theory'
+                                    : 'Lab'))
+                                .where('FacultyID', isEqualTo: facid)
+                                .get()
+                                .then((QuerySnapshot querySnapshot) {
+                              if (querySnapshot.size != 0) {
+                                setState(() {
+                                  error = "Already Registered";
+                                  found = false;
+                                });
+                              }
+                            });
+                          }
 
                           if (!found) {
                             setState(() {
                               spinner = false;
-                              if (list.length == 0)
-                                error = "Course Not Found";
-                              else
-                                slotsLoaded = true;
                             });
                             return;
                           }
 
-                          List<String> regslots = [];
-                          List<TimeSlot> tsl = [];
+                          if ( found ) {
+                                        List<String> regslots = [];
+                                        List<TimeSlot> tsl = [];
 
-                          await FirebaseFirestore.instance
-                              .collection('CoursesTimeSlot')
-                              .where('FacultyID', isEqualTo: facid)
-                              .get()
-                              .then((QuerySnapshot querySnapshot) {
-                                querySnapshot.docs.forEach((doc) {
-                                  tsl.add(TimeSlot(startDayTime: doc['StartDayTime'], endDayTime: doc['EndDayTime']));
-                                });
-                          });
+                                        await FirebaseFirestore.instance
+                                            .collection('CoursesTimeSlot')
+                                            .where('FacultyID',
+                                                isEqualTo: facid)
+                                            .get()
+                                            .then(
+                                                (QuerySnapshot querySnapshot) {
+                                          querySnapshot.docs.forEach((doc) {
+                                            tsl.add(TimeSlot(
+                                                startDayTime:
+                                                    doc['StartDayTime'],
+                                                endDayTime: doc['EndDayTime']));
+                                          });
+                                        });
 
-                          for ( int i=0; i<tsl.length; i++ )
-                            {
-                              await FirebaseFirestore.instance
-                                  .collection('TimeSlot')
-                                  .where('EndDayTime', isEqualTo: tsl[i].endDayTime)
-                                  .where('StartDayTime', isEqualTo: tsl[i].startDayTime)
-                                  .get()
-                                  .then((QuerySnapshot querySnapshot) {
-                                querySnapshot.docs.forEach((doc) {
-                                  regslots.add(doc['Slot']);
-                                });
-                              });
-                            }
+                                        for (int i = 0; i < tsl.length; i++) {
+                                          await FirebaseFirestore.instance
+                                              .collection('TimeSlot')
+                                              .where('EndDayTime',
+                                                  isEqualTo: tsl[i].endDayTime)
+                                              .where('StartDayTime',
+                                                  isEqualTo:
+                                                      tsl[i].startDayTime)
+                                              .get()
+                                              .then((QuerySnapshot
+                                                  querySnapshot) {
+                                            querySnapshot.docs.forEach((doc) {
+                                              regslots.add(doc['Slot']);
+                                            });
+                                          });
+                                        }
 
-                          print("Already reg slots");
-                          regslots.forEach((element) { print(element);});
+                                        print("Already reg slots");
+                                        regslots.forEach((element) {
+                                          print(element);
+                                        });
 
-                          await FirebaseFirestore.instance
-                              .collection('TimeSlot')
-                              .get()
-                              .then((QuerySnapshot querySnapshot) {
-                            querySnapshot.docs.forEach((doc) {
-                              if (!list.contains(doc['Slot'])) {
-                                if (classType == ClassType.Theory &&
-                                    doc['Slot'][0] != 'L' && !regslots.contains(doc['Slot']))
-                                  list.add(doc['Slot']);
-                                else if (classType == ClassType.Lab &&
-                                    doc['Slot'][0] == 'L' && !regslots.contains(doc['Slot']))
-                                  list.add(doc['Slot']);
-                              }
-                            });
-                          });
+                                        await FirebaseFirestore.instance
+                                            .collection('TimeSlot')
+                                            .get()
+                                            .then(
+                                                (QuerySnapshot querySnapshot) {
+                                          querySnapshot.docs.forEach((doc) {
+                                            if (!list.contains(doc['Slot'])) {
+                                              if (classType ==
+                                                      ClassType.Theory &&
+                                                  doc['Slot'][0] != 'L' &&
+                                                  !regslots
+                                                      .contains(doc['Slot']))
+                                                list.add(doc['Slot']);
+                                              else if (classType ==
+                                                      ClassType.Lab &&
+                                                  doc['Slot'][0] == 'L' &&
+                                                  !regslots
+                                                      .contains(doc['Slot']))
+                                                list.add(doc['Slot']);
+                                            }
+                                          });
+                                        });
+                                      }
 
-                          setState(() {
+                                      setState(() {
                             spinner = false;
-                            if (list.length == 0)
-                              error = "Course Not Found";
-                            else
-                              slotsLoaded = true;
+                            slotsLoaded = true;
                           });
                         }
                             : () {},
