@@ -18,7 +18,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Dashboard extends StatefulWidget {
   static String id = "Dashboard";
-  List<int> selectedItem = [];
   List<int> heading = [0];
 
   @override
@@ -32,13 +31,7 @@ class _DashboardState extends State<Dashboard> {
 
   void initializeDBread() async {
     prefs = await SharedPreferences.getInstance();
-    // print("initiating");
     getData(prefs.getString('user'));
-    //list.sort((a,b) => a.weekday.compareTo(b.weekday));
-    // print("Loaded");
-    // print(list.length);
-    // for ( var x in list )
-    //     print("ok");
   }
 
   int getWeekdayNum(String weekday) {
